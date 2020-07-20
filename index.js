@@ -24,8 +24,10 @@ io.on("connection", (client) => {
       let rooms = Object.keys(client.rooms);
       
       io.to(client.id).emit("socketId", client.id );
-      if(numClients === 0) {
-        io.to(client.id).emit("initiator", client.id );
+      if(numClients === 1) {
+        const targetId = Object.keys(clientsInRoom.sockets)[0]
+        console.log('target', targetId)
+        io.to(targetId).emit("initiator", targetId );
       }
      
       io.to(room).emit("broadcast", {
@@ -56,8 +58,8 @@ io.on("connection", (client) => {
     io.to(initiatorId).emit('answer', data)
  })
 
-  client.on("disconnect", () => {
-    console.log("用户已经下车!");
+  client.on("disconnect", reason => {
+    console.log("用户已经下车!", reason);
   });
 });
 
